@@ -24,6 +24,24 @@ type ChapterMetadata struct {
 	Lang		string
 }
 
+func (m *ChapterMetadata) FormattedTitle() string {
+	titleBits := make([]string, 0)
+
+	if m.Volume != "" {
+		titleBits = append(titleBits, fmt.Sprintf("Vol. %s", m.Volume))
+	}
+
+	if m.Chapter != 0.0 {
+		titleBits = append(titleBits, fmt.Sprintf("Ch. %s", strconv.FormatFloat(m.Chapter, 'f', -1, 64)))
+	}
+
+	if m.Title != "" {
+		titleBits = append(titleBits, m.Title)
+	}
+
+	return strings.Join(titleBits, " ")
+}
+
 func (d *Downloader) GetChapterData() (*ChapterPageData, error) {
 	metadata := make([]*ChapterMetadata, 0)
 	var languages map[string]string
