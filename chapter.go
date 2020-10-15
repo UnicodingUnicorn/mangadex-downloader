@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
+	"regexp"
 	"golang.org/x/net/html"
 )
 
@@ -170,8 +170,9 @@ func GetTitle(n *html.Node) string {
 			}
 		}
 	})
-
-	return title.String()
+	regex := regexp.MustCompile("[^a-zA-Z0-9 ]+") 
+	ress := regex.ReplaceAllString(title.String(), "") 
+	return ress
 }
 
 func GetChaptersDataSteps() []*Step {
