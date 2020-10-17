@@ -64,7 +64,7 @@ func (d *Downloader) GetChapterImages(downloadData *ChapterDownloadData, title s
 				}
 			}
 		}
-		regex := regexp.MustCompile("[^a-zA-Z0-9 ]+") 
+		regex := regexp.MustCompile("^[ \t]+|[ \t]+$|[^a-zA-Z0-9 ]+") 
 		ress := regex.ReplaceAllString(downloadData.Name, "") 
 		// Make sure subfolder exists
 		err = DirExists(path.Join(d.OutputDir, title, ress))

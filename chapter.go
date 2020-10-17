@@ -170,7 +170,7 @@ func GetTitle(n *html.Node) string {
 			}
 		}
 	})
-	regex := regexp.MustCompile("[^a-zA-Z0-9 ]+") 
+	regex := regexp.MustCompile("^[ \t]+|[ \t]+$|[^a-zA-Z0-9 ]+") 
 	ress := regex.ReplaceAllString(title.String(), "") 
 	return ress
 }
