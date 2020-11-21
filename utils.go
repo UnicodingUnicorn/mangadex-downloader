@@ -37,10 +37,7 @@ func DirExists(dir string) error {
 }
 
 func GetDirName(title string) string {
-	reg, err := regexp.Compile("[^a-zA-Z0-9.()[\\]\\-_!' ]+")
-	if err != nil {
-		return title
-	}
+	reg := regexp.MustCompile("^[ \t]+|[ \t]+$|[^a-zA-Z0-9.()[\\]\\-_!' ]+")
 
 	return reg.ReplaceAllString(title, "-")
 }
