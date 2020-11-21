@@ -5,17 +5,17 @@ import (
 	"io"
 	"log"
 	"mime"
-	"path"
 	"os"
+	"path"
 	"strconv"
 	"time"
-	"regexp"
+
 	"github.com/cheggaaa/pb/v3"
 )
 
-func (d *Downloader) GetChaptersImages(downloadData []*ChapterDownloadData, title string) error {
+func (d *Downloader) GetChaptersImages(downloadData []*ChapterDownloadData, mangaDir string) error {
 	// Make sure master subfolder exists
-	err := DirExists(path.Join(d.OutputDir, title))
+	err := DirExists(path.Join(d.OutputDir, mangaDir))
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func (d *Downloader) GetChaptersImages(downloadData []*ChapterDownloadData, titl
 
 		bar := pb.StartNew(len(dd.Urls))
 
-		err = d.GetChapterImages(dd, title, func() {
+		err = d.GetChapterImages(dd, mangaDir, func() {
 			bar.Increment()
 		})
 
@@ -39,7 +39,7 @@ func (d *Downloader) GetChaptersImages(downloadData []*ChapterDownloadData, titl
 	return nil
 }
 
-func (d *Downloader) GetChapterImages(downloadData *ChapterDownloadData, title string, update func()) error {
+func (d *Downloader) GetChapterImages(downloadData *ChapterDownloadData, mangaDir string, update func()) error {
 	// Create padded format string for image names
 	nameFmtStr := fmt.Sprintf("%%0%dd%%s", len(strconv.Itoa(len(downloadData.Urls))))
 
@@ -64,16 +64,18 @@ func (d *Downloader) GetChapterImages(downloadData *ChapterDownloadData, title s
 				}
 			}
 		}
-		regex := regexp.MustCompile("^[ \t]+|[ \t]+$|[^a-zA-Z0-9 ]+") 
-		ress := regex.ReplaceAllString(downloadData.Name, "") 
+
+		// Get os friendly folder name
+		chapDir := GetDirName(downloadData.Name)
+
 		// Make sure subfolder exists
-		err = DirExists(path.Join(d.OutputDir, title, ress))
+		err = DirExists(path.Join(d.OutputDir, mangaDir, chapDir))
 		if err != nil {
 			return err
 		}
 
 		// Create and write file
-		file, err := os.Create(path.Join(d.OutputDir, title, ress, fmt.Sprintf(nameFmtStr, i + 1, extension)))
+		file, err := os.Create(path.Join(d.OutputDir, mangaDir, chapDir, fmt.Sprintf(nameFmtStr, i+1, extension)))
 		if err != nil {
 			return err
 		}
