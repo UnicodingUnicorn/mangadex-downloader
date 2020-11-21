@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 	"time"
-
+	"regexp"
 	"github.com/cheggaaa/pb/v3"
 )
 
@@ -64,15 +64,16 @@ func (d *Downloader) GetChapterImages(downloadData *ChapterDownloadData, title s
 				}
 			}
 		}
-
+		regex := regexp.MustCompile("^[ \t]+|[ \t]+$|[^a-zA-Z0-9 ]+") 
+		ress := regex.ReplaceAllString(downloadData.Name, "") 
 		// Make sure subfolder exists
-		err = DirExists(path.Join(d.OutputDir, title, downloadData.Name))
+		err = DirExists(path.Join(d.OutputDir, title, ress))
 		if err != nil {
 			return err
 		}
 
 		// Create and write file
-		file, err := os.Create(path.Join(d.OutputDir, title, downloadData.Name, fmt.Sprintf(nameFmtStr, i + 1, extension)))
+		file, err := os.Create(path.Join(d.OutputDir, title, ress, fmt.Sprintf(nameFmtStr, i + 1, extension)))
 		if err != nil {
 			return err
 		}
