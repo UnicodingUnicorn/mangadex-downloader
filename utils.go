@@ -3,6 +3,7 @@ package main
 import (
 	"math"
 	"os"
+	"regexp"
 
 	"golang.org/x/net/html"
 )
@@ -33,4 +34,13 @@ func DirExists(dir string) error {
 	}
 
 	return nil
+}
+
+func GetDirName(title string) string {
+	reg, err := regexp.Compile("[^a-zA-Z0-9.()[\\]\\-_!' ]+")
+	if err != nil {
+		return title
+	}
+
+	return reg.ReplaceAllString(title, "-")
 }
