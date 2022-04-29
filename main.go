@@ -72,7 +72,8 @@ func main() {
 		log.Fatal("no chapters in the specified language found!")
 	}
 
-	err = DirExists(path.Join(d.OutputDir, chaptersData.Title))
+	mangaDir := GetDirName(chaptersData.Title)
+	err = DirExists(path.Join(d.OutputDir, mangaDir))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,7 +89,7 @@ func main() {
 		log.Printf("Retrieving %s...\n", downloadData.Name)
 
 		bar := pb.StartNew(len(downloadData.Urls))
-		err = d.GetChapterImages(downloadData, chaptersData.Title, func() {
+		err = d.GetChapterImages(downloadData, mangaDir, func() {
 			bar.Increment()
 		})
 		bar.Finish()
